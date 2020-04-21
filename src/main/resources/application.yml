@@ -1,0 +1,51 @@
+spring:
+  datasource:
+    continue-on-error: false
+    name: drug_manager
+    generate-unique-name: false
+    url: jdbc:mariadb://mariadb:3306/drug_manager
+    username: MHC
+    password: yousql
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.mariadb.jdbc.Driver
+    sql-script-encoding: UTF-8
+    separator: ;
+    druid:
+      name: drug_manager
+      initial-size: 5
+      max-active: 20
+      min-idle: 5
+      max-wait: 60000
+      time-between-eviction-runs-millis: 40000
+      min-evictable-idle-time-millis: 300000
+      validation-query: select 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: false
+      use-global-data-source-stat: true
+      stat-view-servlet:
+        enabled: true
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 500
+          merge-sql: true
+        slf4j:
+          enabled: true
+  mvc:
+    static-path-pattern: /static/**
+  thymeleaf:
+    encoding: UTF-8
+    cache: false
+  redis:
+    host: redis
+logging:
+  level:
+    root: warn
+    org.mybatis: debug
+    tk.mybatis: debug
+    top.codermhc: debug
+#    druid: debug
+#    sql: debug
+
