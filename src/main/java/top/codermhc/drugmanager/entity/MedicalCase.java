@@ -2,6 +2,9 @@ package top.codermhc.drugmanager.entity;
 
 import javax.persistence.*;
 
+/*
+ * @author Ye Minghui
+ */
 @Table(name = "medical_case")
 public class MedicalCase {
     /**

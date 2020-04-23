@@ -3,6 +3,9 @@ package top.codermhc.drugmanager.entity;
 import java.util.Date;
 import javax.persistence.*;
 
+/*
+ * @author Ye Minghui
+ */
 @Table(name = "inventory_change")
 public class InventoryChange {
     /**

@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * @author Ye Minghui
- * @date 2020/3/27 下午6:24
  */
 @Slf4j
 @SpringBootTest

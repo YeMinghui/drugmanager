@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/*
+ * @author Ye Minghui
+ */
 public final class JSON {
 
     private JSON() {}

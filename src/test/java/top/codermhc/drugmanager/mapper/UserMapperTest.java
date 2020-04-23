@@ -13,7 +13,6 @@ import top.codermhc.drugmanager.utils.JSON;
 
 /**
  * @author Ye Minghui
- * @date 2020/3/28 下午1:09
  */
 @Slf4j
 @SpringBootTest

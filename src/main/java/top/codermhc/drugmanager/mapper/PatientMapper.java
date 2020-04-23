@@ -6,7 +6,6 @@ import top.codermhc.drugmanager.entity.Patient;
 
 /**
  * @author Ye Minghui
- * @date 2020/04/21 下午10:43
  */
 @Repository
 public interface PatientMapper extends Mapper<Patient> {

@@ -1,6 +1,5 @@
 package top.codermhc.drugmanager.service.impl;
 
-import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -9,13 +8,16 @@ import top.codermhc.drugmanager.entity.User;
 import top.codermhc.drugmanager.mapper.UserMapper;
 import top.codermhc.drugmanager.service.UserService;
 
+/*
+ * @author Ye Minghui
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
 
-    @Resource(name = "redisTemplate")
+    @Autowired
     RedisTemplate<String, Object> redisTemplate;
 
     /**

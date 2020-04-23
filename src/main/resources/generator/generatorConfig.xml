@@ -33,7 +33,8 @@
   </jdbcConnection>
 
   <javaModelGenerator targetPackage="top.codermhc.drugmanager.entity"
-    targetProject="src/main/java"/>
+    targetProject="src/test"/>
+<!--    targetProject="src/main/java"/>-->
 
   <table tableName="%">
     <generatedKey column="id" sqlStatement="MySql" identity="true"/>

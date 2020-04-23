@@ -6,7 +6,6 @@ import tk.mybatis.spring.annotation.MapperScan;
 
 /**
  * @author Ye Minghui
- * @date 2020/3/28 上午11:49
  */
 @MapperScan("top.codermhc.drugmanager.mapper")
 @SpringBootApplication
