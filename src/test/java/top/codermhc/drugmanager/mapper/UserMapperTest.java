@@ -2,12 +2,14 @@ package top.codermhc.drugmanager.mapper;
 
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 import top.codermhc.drugmanager.entity.User;
+import top.codermhc.drugmanager.utils.JSON;
 
 /**
  * @author Ye Minghui
@@ -21,13 +23,17 @@ class UserMapperTest {
     UserMapper userMapper;
 
     @Test
-    void selectByName() {
-        System.out.println(userMapper.selectByName("MHC"));
+    void insertTest() {
+        User user = new User();
+        user.setName("MHC");
+        user.setEmail("MH_C_Y@163.com");
+        Assertions.assertEquals(1,userMapper.insertSelective(user));
+        log.info("{}", JSON.stringExcludeNull(user));
     }
 
     @Test
     void testPrimaryKey() {
-        System.out.println(userMapper.selectByPrimaryKey(1));
+        log.info("{}", JSON.stringExcludeNull(userMapper.selectByPrimaryKey(1)));
     }
 
     @Test
@@ -37,7 +43,7 @@ class UserMapperTest {
             .andWhere(Sqls.custom().andEqualTo("name", "MHC"))
             .build();
         final List<User> users = userMapper.selectByExample(example);
-        System.out.println(users.get(0));
+        log.info("{}", JSON.stringExcludeNull(users.get(0)));
     }
 
 }

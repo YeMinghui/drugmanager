@@ -40,12 +40,12 @@ spring:
     cache: false
   redis:
     host: redis
+  cache:
+    type: redis
 logging:
   level:
     root: warn
     org.mybatis: debug
     tk.mybatis: debug
-    top.codermhc: debug
-#    druid: debug
-#    sql: debug
-
+    top.codermhc.drugmanager: debug
+    org.springframework.cache: trace

@@ -11,10 +11,4 @@ import top.codermhc.drugmanager.entity.User;
 @Repository
 public interface UserMapper extends Mapper<User> {
 
-    default User selectByName(String name) {
-        User user = new User();
-        user.setName(name);
-        return selectOne(user);
-    }
-
 }
