@@ -2,7 +2,7 @@ package top.codermhc.drugmanager.service;
 
 import top.codermhc.drugmanager.entity.User;
 
-/*
+/**
  * @author Ye Minghui
  */
 public interface UserService {

@@ -2,7 +2,7 @@ package top.codermhc.drugmanager.entity;
 
 import javax.persistence.*;
 
-/*
+/**
  * @author Ye Minghui
  */
 @Table(name = "prescription")

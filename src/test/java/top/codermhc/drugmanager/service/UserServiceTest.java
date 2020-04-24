@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import top.codermhc.drugmanager.entity.User;
 import top.codermhc.drugmanager.utils.JSON;
 
-/*
+/**
  * @author Ye Minghui
  */
 @Slf4j

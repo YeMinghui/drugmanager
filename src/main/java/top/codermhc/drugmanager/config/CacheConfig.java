@@ -22,7 +22,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
-/*
+/**
  * @author Ye Minghui
  */
 @EnableCaching
@@ -47,7 +47,7 @@ public class CacheConfig {
     }
 
     @Bean
-    public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory){
+    RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory){
         RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
             .serializeKeysWith(SerializationPair.fromSerializer(RedisSerializer.string()))
             .serializeValuesWith(SerializationPair.fromSerializer(jackson2JsonRedisSerializer()))
@@ -59,7 +59,7 @@ public class CacheConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(RedisSerializer.string());
         redisTemplate.setValueSerializer(jackson2JsonRedisSerializer());

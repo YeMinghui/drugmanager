@@ -8,7 +8,7 @@ import top.codermhc.drugmanager.entity.User;
 import top.codermhc.drugmanager.mapper.UserMapper;
 import top.codermhc.drugmanager.service.UserService;
 
-/*
+/**
  * @author Ye Minghui
  */
 @Service
