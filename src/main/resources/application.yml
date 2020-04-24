@@ -47,5 +47,5 @@ logging:
     root: warn
     org.mybatis: debug
     tk.mybatis: debug
-    top.codermhc.drugmanager: debug
+    top.codermhc.drugmanager: trace
     org.springframework.cache: trace
