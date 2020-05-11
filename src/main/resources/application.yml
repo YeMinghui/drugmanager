@@ -3,7 +3,7 @@ spring:
     continue-on-error: false
     name: drug_manager
     generate-unique-name: false
-    url: jdbc:mariadb://mariadb:3306/drug_manager
+    url: jdbc:mariadb://localhost:3306/drug_manager
     username: MHC
     password: yousql
     type: com.alibaba.druid.pool.DruidDataSource
@@ -34,18 +34,30 @@ spring:
         slf4j:
           enabled: true
   mvc:
-    static-path-pattern: /static/**
+#    static-path-pattern: /static/**
+    throw-exception-if-no-handler-found: true
+#  resources:
+#    add-mappings: false
   thymeleaf:
     encoding: UTF-8
     cache: false
-  redis:
-    host: redis
   cache:
     type: redis
 logging:
   level:
     root: warn
-    org.mybatis: debug
-    tk.mybatis: debug
-    top.codermhc.drugmanager: trace
-    org.springframework.cache: trace
+    org.mybatis: info
+    tk.mybatis: info
+    top.codermhc.drugmanager: info
+    org.springframework.cache: info
+#    org.apache.shiro: trace
+    org.crazycake.shiro: trace
+server:
+  port: 8090
+  error:
+    whitelabel:
+      enabled: false
+
+shiro-redis:
+  redis-manager:
+    host: localhost:6379

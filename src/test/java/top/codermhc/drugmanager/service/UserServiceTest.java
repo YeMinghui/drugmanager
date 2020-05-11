@@ -22,4 +22,20 @@ class UserServiceTest {
         User user = userService.findUserById(1);
         log.info("{}", JSON.stringExcludeNull(user));
     }
+
+    @Test
+    void findUserByWorkId() {
+        User user = userService.findUserByWorkId("1");
+        log.info("{}", JSON.stringExcludeNull(user));
+    }
+
+    @Test
+    void addUser() {
+        User user = new User();
+        user.setIdentify("510704199704022836");
+        user.setWorkId("123");
+        userService.addUser(user);
+        log.info("{}", JSON.stringExcludeNull(user));
+    }
+
 }

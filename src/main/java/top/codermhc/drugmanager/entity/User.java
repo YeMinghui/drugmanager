@@ -1,6 +1,7 @@
 package top.codermhc.drugmanager.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 /**
  * @author Ye Minghui
@@ -24,6 +25,8 @@ public class User {
     /**
      * 身份证号
      */
+    @NotNull
+    @Pattern(regexp = "^[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$", message = "身份证号不合法")
     @Column(name = "identify")
     private String identify;
 
@@ -46,20 +49,9 @@ public class User {
     private Long departmentId;
 
     /**
-     * 密码
-     */
-    @Column(name = "password")
-    private String password;
-
-    /**
-     * 盐
-     */
-    @Column(name = "salt")
-    private String salt;
-
-    /**
      * 电子邮箱
      */
+    @Email
     @Column(name = "email")
     private String email;
 
@@ -175,42 +167,6 @@ public class User {
      */
     public void setDepartmentId(Long departmentId) {
         this.departmentId = departmentId;
-    }
-
-    /**
-     * 获取密码
-     *
-     * @return password - 密码
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * 设置密码
-     *
-     * @param password 密码
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    /**
-     * 获取盐
-     *
-     * @return salt - 盐
-     */
-    public String getSalt() {
-        return salt;
-    }
-
-    /**
-     * 设置盐
-     *
-     * @param salt 盐
-     */
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     /**

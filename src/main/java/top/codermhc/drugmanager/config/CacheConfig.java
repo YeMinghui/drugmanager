@@ -58,7 +58,7 @@ public class CacheConfig {
             .cacheDefaults(defaultCacheConfig).withInitialCacheConfigurations(map).build();
     }
 
-    @Bean
+    @Bean(name = "cacheRedisTemplate")
     RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(RedisSerializer.string());

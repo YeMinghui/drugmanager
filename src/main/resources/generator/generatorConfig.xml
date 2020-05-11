@@ -27,7 +27,7 @@
   </plugin>
 
   <jdbcConnection driverClass="org.mariadb.jdbc.Driver"
-    connectionURL="jdbc:mariadb://mariadb:3306/drug_manager"
+    connectionURL="jdbc:mariadb://localhost:3306/drug_manager"
     userId="MHC"
     password="yousql">
   </jdbcConnection>
