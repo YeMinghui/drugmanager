@@ -1,0 +1,47 @@
+package ${package.Entity};
+
+#foreach($pkg in ${table.importPackages})
+import ${pkg};
+#end
+#if(${entityLombokModel})
+import lombok.Data;
+#end
+
+/**
+ * $!{table.comment}
+ *
+ * @author ${author}
+ */
+## 使用lombok
+#if(${entityLombokModel})
+@Data
+#end
+## 有NamingStrategy为true
+#if(${table.convert})
+@TableName("${table.name}")
+#end
+public class ${entity} implements Serializable {
+
+## ----------  BEGIN 字段循环遍历  ----------
+#foreach($field in ${table.fields})
+    #if($!field.comment)
+    /**
+     * $!field.comment
+     */
+    #end
+## 主键策略
+#if(${field.keyFlag})
+#if(${field.keyIdentityFlag})
+    @TableId(value = "${field.name}", type = IdType.AUTO)
+#elseif(!$null.isNull(${idType}) && "$!idType" != "")
+    @TableId(value = "${field.name}", type = IdType.${idType})
+#elseif(${field.convert})
+    @TableId("${field.name}")
+#end
+#end
+    private ${field.propertyType} ${field.propertyName};
+
+#end
+## ----------  END 字段循环遍历  ----------
+## ---------- 使用的lombok,所以后面的get/set都不要 ---------------
+}

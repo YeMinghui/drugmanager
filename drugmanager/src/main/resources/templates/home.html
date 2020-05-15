@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="icon" th:href="@{/static/favicon.ico}">
+</head>
+<body>
+<p th:text="${user}">user</p>
+<p th:text="${user.getName()}">name</p>
+<p th:text="${shiro_session.getAttributeKeys()}">session</p>
+
+<div th:each="z:${shiro_session.getAttributeKeys()}">
+  <p th:text="${shiro_session.getAttribute(z)}"></p>
+</div>
+
+<a href="/admin.html">ADMIN</a>
+</body>
+</html>
