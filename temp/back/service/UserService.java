@@ -35,7 +35,7 @@ public interface UserService {
     User findUserByIdentity(String identity);
 
     /**
-     * 添加用户, 并生成默认登陆信息, 使用身份证后六位作为密码(身份证号非空)
+     * 添加用户, 并生成默认登录信息, 使用身份证后六位作为密码(身份证号非空)
      *
      * @param user 用户
      */

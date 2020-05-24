@@ -6,22 +6,23 @@ import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 
-@SuppressWarnings("rawtypes")
-public class ShiroCacheManager implements CacheManager {
+@SuppressWarnings({"rawtypes","unchecked"})
+@Component
+public class CustomCacheManager implements CacheManager {
 
-    private final String prefix = "shiro.";
+    private final String PREFIX = "shiro:";
     private final ConcurrentHashMap<String, Cache> caches = new ConcurrentHashMap<>();
 
-    @Resource(name = "shiroRedisTemplate")
+    @Resource(name = "myRedisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Cache getCache(String name) throws CacheException {
-        Cache cache = caches.get(name);
+    public <K, V> Cache<K, V> getCache(String name) throws CacheException {
+        Cache<K,V> cache = caches.get(name);
         if (cache == null) {
-            cache = new ShiroRedisCache(prefix + name, redisTemplate);
+            cache = new ShiroRedisCache<>(PREFIX.concat(name), redisTemplate);
             caches.put(name, cache);
         }
         return cache;

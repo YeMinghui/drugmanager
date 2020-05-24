@@ -5,7 +5,6 @@ import top.codermhc.drugmanager.base.mapper.ManufacturerMapper;
 import top.codermhc.drugmanager.base.service.ManufacturerService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -15,8 +14,5 @@ import java.util.List;
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
 public class ManufacturerServiceImpl extends ServiceImpl<ManufacturerMapper, Manufacturer> implements ManufacturerService {
-
-    @Autowired
-    private ManufacturerMapper manufacturerMapper;
 
 }

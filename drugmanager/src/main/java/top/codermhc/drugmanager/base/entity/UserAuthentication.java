@@ -1,9 +1,10 @@
 package top.codermhc.drugmanager.base.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
@@ -47,5 +48,10 @@ public class UserAuthentication implements Serializable {
      * 用户所属角色
      */
     private Integer roleId;
+
+    /**
+     * 上次登录时间
+     */
+    private LocalDateTime lastLoginTime;
 
 }

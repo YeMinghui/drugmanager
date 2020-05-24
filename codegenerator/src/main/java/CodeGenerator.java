@@ -17,7 +17,7 @@ public class CodeGenerator {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
-        gc.setOutputDir(projectPath + "drugmanager/src/main/java");
+        gc.setOutputDir(projectPath + "/./drugmanager/src/main/java");
         gc.setAuthor("Ye Minghui");
         gc.setOpen(false);
         gc.setEnableCache(true);
@@ -27,7 +27,7 @@ public class CodeGenerator {
         gc.setControllerName("%sController");
         gc.setMapperName("%sMapper");
         gc.setEntityName("%s");
-        gc.setFileOverride(false);
+        gc.setFileOverride(true);
         mpg.setGlobalConfig(gc);
 
         // 数据源配置
@@ -57,9 +57,10 @@ public class CodeGenerator {
         templateConfig.setEntity("templates/entity2.java");
         templateConfig.setService("templates/service.java");
         templateConfig.setServiceImpl("templates/serviceImpl.java");
-        templateConfig.setController("templates/controller.java");
+//        templateConfig.setController("templates/controller.java");
         templateConfig.setMapper("templates/mapper.java");
 
+        templateConfig.setController(null);
         templateConfig.setXml(null);
         templateConfig.setEntityKt(null);
         mpg.setTemplate(templateConfig);

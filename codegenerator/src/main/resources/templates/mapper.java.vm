@@ -1,5 +1,6 @@
 package ${package.Mapper};
 
+import org.apache.ibatis.annotations.CacheNamespace;
 import ${package.Entity}.${entity};
 import ${superMapperClassPackage};
 import org.springframework.stereotype.Repository;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
  * @author ${author}
  */
 @Repository
+@CacheNamespace
 public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
 
 }

@@ -32,10 +32,10 @@ import top.codermhc.drugmanager.back.utils.UserStatus;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
+    @Resource
     private UserMapper userMapper;
 
-    @Autowired
+    @Resource
     private UserAuthenticationMapper userAuthenticationMapper;
 
     @Resource(name = "cacheRedisTemplate")
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 添加用户, 并生成默认登陆信息, 使用身份证后六位作为密码(身份证号非空)
+     * 添加用户, 并生成默认登录信息, 使用身份证后六位作为密码(身份证号非空)
      *
      * @param user 用户
      */
@@ -132,9 +132,9 @@ public class UserServiceImpl implements UserService {
         return list;
     }
 
-    @Autowired
+    @Resource
     private DepartmentService departmentService;
-    @Autowired
+    @Resource
     private RoleService roleService;
     /**
      * 查询所有用户的所有信息

@@ -1,86 +1,135 @@
 package top.codermhc.drugmanager.shiro;
 
-
 import java.util.Collection;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
-import org.springframework.data.redis.core.BoundHashOperations;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.data.redis.core.RedisTemplate;
+import top.codermhc.drugmanager.base.entity.User;
+import top.codermhc.drugmanager.base.entity.UserAuthentication;
 
 @Slf4j
+@SuppressWarnings({"unchecked"})
 public class ShiroRedisCache<K, V> implements Cache<K, V> {
 
-    private Object hashKey(K k) {
-        return k;
+    private String wrapKey(String key) {
+        return cacheName.concat(":").concat(key);
     }
 
-    private String cacheKey;
-    private RedisTemplate<String,Object> redisTemplate;
+    private String key(K k) {
+        // AuthenticationToken 缓存，k 为 Principal
+        if (k instanceof String) {
+            return (String) k;
+        }
+        // AuthorizationInfo 缓存，k 为 PrincipalCollection
+        if (k instanceof PrincipalCollection) {
+            String key = "";
+            Object o = ((PrincipalCollection) k).getPrimaryPrincipal();
+            if (o instanceof UserAuthentication) {
+                key = ((UserAuthentication) o).getWorkId();
+            } else if (o instanceof User) {
+                key = ((User) o).getWorkId();
+            } else {
+                key = k.toString();
+            }
+            return key;
+        }
 
-    public ShiroRedisCache(String cacheKey, RedisTemplate<String,Object> redisTemplate) {
-        this.cacheKey = cacheKey;
+        // 注销时会获取PrincipalCollection中的第一个
+        if (k instanceof UserAuthentication) {
+            return ((UserAuthentication) k).getWorkId();
+        }
+
+        if (k instanceof User) {
+            return ((User) k).getWorkId();
+        }
+        // 默认当作 String
+        return (String) k;
+    }
+
+    private final String cacheName;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public ShiroRedisCache(String cacheName, RedisTemplate<String,Object> redisTemplate) {
+        this.cacheName = cacheName;
         this.redisTemplate = redisTemplate;
     }
 
     @Override
     public V get(K k) throws CacheException {
-        log.debug("shiro cache. get key={}", k);
-        BoundHashOperations<String,K,V> hash = redisTemplate.boundHashOps(cacheKey);
-        Object key = hashKey(k);
-        V v = hash.get(key);
+        String key = key(k);
+        String fullKey = wrapKey(key);
+        log.debug("GET cache name {}, key {}.", cacheName, key);
+        V v = (V) redisTemplate.boundValueOps(fullKey).get();
         if (v == null) {
-            log.warn("shiro cache {} key={} doesn't exist.", cacheKey, k);
+            log.warn("[FAILED] GET cache name {}, key {}, doesn't exist.", cacheName, key);
         } else {
-            log.debug("shiro cache {} got key={}, value={}.", cacheKey, k, v);
+            redisTemplate.expire(key, 1, TimeUnit.HOURS);
+            log.trace("[SUCCESS] GET cache name {}, key {}, value {}.", cacheName, key, v);
         }
         return v;
     }
 
     @Override
     public V put(K k, V v) throws CacheException {
-        log.debug("shiro cache {} put key={}, value={}", cacheKey, k, v);
-        BoundHashOperations<String,K,V> hash = redisTemplate.boundHashOps(cacheKey);
-        Object key = hashKey(k);
-        hash.put((K) key, v);
+        String key = key(k);
+        String fullKey = wrapKey(key);
+        log.debug("PUT cache name {}, key {}, value {}.", cacheName, key, v);
+        redisTemplate.boundValueOps(fullKey).set(v,1,TimeUnit.HOURS);
+        log.trace("[SUCCESS] PUT cache name {}, key {}, value {}.", cacheName, key, v);
         return v;
     }
 
     @Override
     public V remove(K k) throws CacheException {
-        log.debug("shiro cache {} remove key={}", cacheKey, k);
-        BoundHashOperations<String, K, V> hash = redisTemplate.boundHashOps(cacheKey);
-        Object key = hashKey(k);
-        V v = hash.get(key);
-        hash.delete(key);
+        String key = key(k);
+        String fullKey = wrapKey(key);
+        log.debug("DELETE cache name {}, key {}.", cacheName, key);
+        V v = (V) redisTemplate.boundValueOps(fullKey).get();
+        if (v == null) {
+            log.warn("[FAILED] DELETE cache name {}, key {}.", cacheName, key);
+        } else {
+            redisTemplate.delete(fullKey);
+            log.trace("[SUCCESS] DELETE cache name {}, key {}.", cacheName, key);
+        }
         return v;
     }
 
     @Override
     public void clear() throws CacheException {
-        log.debug("shiro cache {} clear.", cacheKey);
-        redisTemplate.delete(cacheKey);
+        log.debug("CLEAR cache name {}.", cacheName);
+        redisTemplate.delete(wrapKey("*"));
+        log.trace("[SUCCESS] CLEAR cache name {}.", cacheName);
     }
 
     @Override
     public int size() {
-        int size = redisTemplate.boundHashOps(cacheKey).size().intValue();
-        log.debug("shiro cache {} count size={}", cacheKey, size);
+        log.debug("SIZE cache name {}.", cacheName);
+        int size = listKeys().size();
+        log.trace("[SUCCESS] SIZE cache name {}, size {}.", cacheName, size);
         return size;
     }
 
     @Override
     public Set<K> keys() {
-        log.debug("shiro cache {} get keys.", cacheKey);
-        BoundHashOperations<String, K, V> hash = redisTemplate.boundHashOps(cacheKey);
-        return hash.keys();
+        log.debug("KEYS cache name {}.",cacheName);
+        Set<K> ks = listKeys();
+        log.trace("[SUCCESS] KEYS cache name {}, keys {}.",cacheName, ks);
+        return ks;
     }
 
     @Override
     public Collection<V> values() {
-        log.debug("shiro cache {} get values.", cacheKey);
-        BoundHashOperations<String, K, V> hash = redisTemplate.boundHashOps(cacheKey);
-        return hash.values();
+        log.debug("VALUES cache name {}.",cacheName);
+        Collection<V> list = (Collection<V>) redisTemplate.opsForValue().multiGet((Collection<String>) listKeys());
+        log.trace("[SUCCESS] VALUES cache name {}, values {}.", cacheName, list);
+        return list;
+    }
+
+    private Set<K> listKeys() {
+        return (Set<K>) redisTemplate.keys(wrapKey("*"));
     }
 }

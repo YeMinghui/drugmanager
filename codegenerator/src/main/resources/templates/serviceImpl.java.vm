@@ -5,7 +5,6 @@ import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -15,8 +14,5 @@ import java.util.List;
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
 public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
-
-    @Autowired
-    private ${table.mapperName} ${table.entityPath}Mapper;
 
 }

@@ -1,9 +1,9 @@
 package top.codermhc.drugmanager.mapper;
 
+import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import top.codermhc.drugmanager.base.entity.User;
 import top.codermhc.drugmanager.base.mapper.UserMapper;
@@ -16,7 +16,7 @@ import top.codermhc.drugmanager.utils.JSON;
 @SpringBootTest
 class UserMapperTest {
 
-    @Autowired
+    @Resource
     UserMapper userMapper;
 
     @Test

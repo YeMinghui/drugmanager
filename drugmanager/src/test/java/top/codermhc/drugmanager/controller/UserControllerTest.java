@@ -1,5 +1,6 @@
 package top.codermhc.drugmanager.controller;
 
+import javax.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @AutoConfigureMockMvc
 class UserControllerTest {
 
-    @Autowired
+    @Resource
     MockMvc mockMvc;
 
     @Test

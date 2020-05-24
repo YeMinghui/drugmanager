@@ -12,8 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.thymeleaf.exceptions.TemplateEngineException;
+import top.codermhc.drugmanager.Application;
 
 /**
  * 全局异常处理
@@ -23,6 +27,12 @@ import org.thymeleaf.exceptions.TemplateEngineException;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(HttpClientErrorException.class)
+    public ResponseEntity<Object> clientError(HttpClientErrorException e) {
+        log.error(e.getMessage(), e.getRootCause());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<Object> noHandlerFoundException(NoHandlerFoundException e) {
