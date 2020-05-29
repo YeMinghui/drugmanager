@@ -4,6 +4,7 @@ package top.codermhc.drugmanager.shiro;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import javax.annotation.Resource;
 import org.apache.shiro.authc.AuthenticationException;
@@ -52,7 +53,8 @@ public class CustomRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         Role role = roleService.getById(authentication.getRoleId());
         authorizationInfo.addRoles(Collections.singleton(role.getName()));
-        authorizationInfo.addStringPermission(role.getPerms());
+        String[] split = role.getPerms().split(",");
+        authorizationInfo.addStringPermissions(Arrays.asList(split));
         return authorizationInfo;
     }
 

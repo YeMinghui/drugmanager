@@ -1,22 +1,20 @@
 package top.codermhc.drugmanager.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.sun.org.apache.bcel.internal.generic.FSUB;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
 import top.codermhc.drugmanager.base.entity.User;
 import top.codermhc.drugmanager.base.entity.UserAuthentication;
@@ -26,13 +24,14 @@ import top.codermhc.drugmanager.exception.PasswordException;
 import top.codermhc.drugmanager.exception.UserExistException;
 import top.codermhc.drugmanager.service.UserVOService;
 import top.codermhc.drugmanager.utils.PasswordHash;
+import top.codermhc.drugmanager.utils.ResponseData;
 import top.codermhc.drugmanager.utils.SaltGenerator;
 import top.codermhc.drugmanager.vo.UserVO;
 
 /**
  * @author Ye Minghui
  */
-@Controller
+//@Controller
 public class UserController extends BaseController {
 
     @Resource(name = "userServiceImpl")
@@ -58,7 +57,7 @@ public class UserController extends BaseController {
         if (one != null) {
             throw new UserExistException();
         }
-        userService.addUser(user, roleId);
+//        userService.addUser(user, roleId);
         return "redirect:/admin/user.html";
     }
 
@@ -92,20 +91,17 @@ public class UserController extends BaseController {
      * 修改用户信息，管理员可以操作所有用户，用户可以操作自己。
      *
      * @param user   修改的数据
-     * @param status 用户状态
      * @return 重定向页面
      */
     @PatchMapping("/user")
-    public String modifyUser(@ModelAttribute @Valid User user,
-        @RequestParam(value = "status", required = false) Integer status
+    public String modifyUser(@ModelAttribute @Valid User user
         , @RequestParam(value = "roleId", required = false) Integer roleId) {
         UserAuthentication auth = authentication();
         if (ROLE_ADMIN_ID.equals(auth.getRoleId())) {
             if (user.getId() != null) {
                 userService.updateById(user);
-                if (status != null || roleId != null) {
+                if (roleId != null) {
                     UserAuthentication authentication = new UserAuthentication();
-                    authentication.setStatus(status);
                     authentication.setRoleId(roleId);
                     userAuthenticationService.update(authentication,
                         Wrappers.<UserAuthentication>lambdaUpdate().eq(UserAuthentication::getUserId, user.getId()));
@@ -150,4 +146,13 @@ public class UserController extends BaseController {
         doLogout();
         return "redirect:/index.html";
     }
+
+
+    @GetMapping("/user")
+    @ResponseBody
+    public ResponseData get(@RequestParam("id") Long id) {
+        UserVO byId = userVOService.getById(authentication().getUserId());
+        return new ResponseData(HttpStatus.OK, "success", byId);
+    }
+
 }

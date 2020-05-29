@@ -1,8 +1,14 @@
 package top.codermhc.drugmanager.shiro;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import javax.servlet.Filter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.RememberMeManager;
 import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
@@ -10,14 +16,15 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.Cookie;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
-import org.apache.shiro.web.session.mgt.ServletContainerSessionManager;
-import org.apache.shiro.web.session.mgt.WebSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import top.codermhc.drugmanager.utils.JSON;
+import top.codermhc.drugmanager.utils.PropertiesParser;
 
 /**
  * @author Ye Minghui
  */
+@Slf4j
 @Configuration
 public class ShiroConfig {
 
@@ -46,13 +53,30 @@ public class ShiroConfig {
     @Bean
     ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
-        chainDefinition.addPathDefinition("/login.html", "anon");
-        chainDefinition.addPathDefinition("/login", "anon");
-        chainDefinition.addPathDefinition("/forgot.html","anon");
-        chainDefinition.addPathDefinition("/forgot","anon");
-        chainDefinition.addPathDefinition("/static/**", "anon");
-        chainDefinition.addPathDefinition("/**", "user");
+        // 所有访问走ajax请求
+        // 登录url不用认证
+        chainDefinition.addPathDefinition("/login", "ajax,anon");
+        // 从文件中读取规则
+        new PropertiesParser().parse("shiro-rules.properties").forEach(
+            (key, value) -> chainDefinition.addPathDefinition(key,"ajax,".concat(value))
+        );
+        // 默认所有url要认证
+        chainDefinition.addPathDefinition("/**", "ajax,authc");
+        log.debug("shiro-rules: {}", JSON.string(chainDefinition.getFilterChainMap()));
         return chainDefinition;
+    }
+
+    @Bean
+    ShiroFilterFactoryBean shiroFilterFactoryBean() {
+        ShiroFilterFactoryBean shiroFilterFactoryBean = new RestShiroFilterFactoryBean();
+        Map<String, Filter> map = new HashMap<>();
+        map.put("ajax", new AjaxFilter());
+        map.put("authc", new CustomAuthenticationFilter());
+        map.put("perms", new RestPermissionAuthorizationFilter());
+        shiroFilterFactoryBean.setFilters(map);
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(shiroFilterChainDefinition().getFilterChainMap());
+        shiroFilterFactoryBean.setSecurityManager(securityManager());
+        return shiroFilterFactoryBean;
     }
 
     @Bean
@@ -68,19 +92,9 @@ public class ShiroConfig {
         return new CustomCacheManager();
     }
 
-//    @Value("${shiro.sessionManager.sessionIdCookieEnabled:true}") boolean sessionIdCookieEnable;
-//    @Value("${shiro.sessionManager.sessionIdUrlRewritingEnabled:false}") boolean sessionIdUrlRewritingEnable;
     @Bean
     SessionManager sessionManager() {
-        WebSessionManager manager = new ServletContainerSessionManager();
-//        SessionManager manager = new DefaultWebSessionManager();
-//        manager.setSessionFactory(sessionFactory());
-//        manager.setSessionDAO(sessionDAO());
-//        manager.setGlobalSessionTimeout(AbstractSessionManager.DEFAULT_GLOBAL_SESSION_TIMEOUT);
-//        manager.setSessionValidationSchedulerEnabled(true);
-//        manager.setSessionIdCookie(simpleCookie());
-//        manager.setSessionIdCookieEnabled(sessionIdCookieEnable);
-//        manager.setSessionIdUrlRewritingEnabled(sessionIdUrlRewritingEnable);
+        DefaultWebSessionManager manager = new CustomSessionManager();
         return manager;
     }
 

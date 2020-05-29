@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -16,8 +14,8 @@ import top.codermhc.drugmanager.base.entity.Role;
 import top.codermhc.drugmanager.base.service.RoleService;
 import top.codermhc.drugmanager.exception.RoleAdminException;
 
-@Controller
-@RequiresRoles("admin")
+//@Controller
+//@RequiresRoles("admin")
 public class RoleController extends BaseController{
 
     @Resource(name = "roleServiceImpl")

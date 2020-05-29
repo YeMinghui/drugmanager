@@ -60,7 +60,7 @@ public class CodeGenerator {
 //        templateConfig.setController("templates/controller.java");
         templateConfig.setMapper("templates/mapper.java");
 
-        templateConfig.setController(null);
+//        templateConfig.setController(null);
         templateConfig.setXml(null);
         templateConfig.setEntityKt(null);
         mpg.setTemplate(templateConfig);

@@ -4,9 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Resource;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationToken;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.client.HttpClientErrorException;
 import top.codermhc.drugmanager.base.entity.UserAuthentication;
@@ -18,7 +16,6 @@ import top.codermhc.drugmanager.vo.UserVO;
  *
  * @author Ye Minghui
  */
-@Controller
 public class BaseController {
 
     /**
@@ -35,6 +32,15 @@ public class BaseController {
     public UserAuthentication authentication() {
         return (UserAuthentication) SecurityUtils.getSubject().getPrincipal();
     }
+
+    /**
+     * 判断当前对象是否拥有admin角色
+     * @return 是返回true
+     */
+    public boolean isAdmin() {
+        return SecurityUtils.getSubject().hasRole("admin");
+    }
+
 
     /**
      * 注销当前对象

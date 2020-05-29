@@ -7,10 +7,10 @@ import java.util.Map;
 import javax.annotation.Resource;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import top.codermhc.drugmanager.base.entity.Department;
 import top.codermhc.drugmanager.base.entity.Role;
@@ -25,7 +25,7 @@ import top.codermhc.drugmanager.vo.UserVO;
  * @author Ye Minghui
  */
 @RequiresRoles("admin")
-@Controller
+@RestController
 public class AdminController extends BaseController{
 
     @Resource(name = "userVOServiceImpl")

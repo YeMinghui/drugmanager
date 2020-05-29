@@ -1,14 +1,16 @@
 package top.codermhc.drugmanager.base.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import javax.annotation.Resource;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import top.codermhc.drugmanager.base.entity.User;
 import top.codermhc.drugmanager.base.entity.UserAuthentication;
 import top.codermhc.drugmanager.base.mapper.UserAuthenticationMapper;
 import top.codermhc.drugmanager.base.mapper.UserMapper;
 import top.codermhc.drugmanager.base.service.UserService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 import top.codermhc.drugmanager.utils.PasswordHash;
 import top.codermhc.drugmanager.utils.SaltGenerator;
 import top.codermhc.drugmanager.utils.UserFlag;
@@ -20,7 +22,7 @@ import top.codermhc.drugmanager.utils.UserFlag;
 @Transactional(rollbackFor = RuntimeException.class)
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    @Resource
+    @Resource(name = "userAuthenticationMapper")
     private UserAuthenticationMapper userAuthenticationMapper;
     /**
      * 录入新用户，并设置默认密码
@@ -31,11 +33,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public boolean addUser(User user, Integer roleId) {
+        user.setStatus(UserFlag.enable(0,UserFlag.ENABLED));
         save(user);
         UserAuthentication authentication = new UserAuthentication();
         authentication.setUserId(user.getId());
         authentication.setWorkId(user.getWorkId());
-        authentication.setStatus(UserFlag.enable(0,UserFlag.ENABLED));
         String password = user.getIdentity().substring(12);
         String salt = SaltGenerator.generate();
         password = PasswordHash.hash(password, salt);

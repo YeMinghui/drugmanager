@@ -27,6 +27,7 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import top.codermhc.drugmanager.base.entity.UserAuthentication;
 import top.codermhc.drugmanager.shiro.CustomByteSource;
 
@@ -95,6 +96,12 @@ public class GsonConfig {
                 throws JsonParseException {
                 return context.deserialize(json, new TypeToken<CustomByteSource>() {
                 }.getType());
+            }
+        });
+        gsonBuilder.registerTypeAdapter(HttpStatus.class, new JsonSerializer<HttpStatus>() {
+            @Override
+            public JsonElement serialize(HttpStatus src, Type typeOfSrc, JsonSerializationContext context) {
+                return context.serialize(src.value());
             }
         });
         return gsonBuilder.create();
