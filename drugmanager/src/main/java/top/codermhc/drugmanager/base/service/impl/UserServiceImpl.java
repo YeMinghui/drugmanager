@@ -1,6 +1,8 @@
 package top.codermhc.drugmanager.base.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         authentication.setPassword(password);
         authentication.setSalt(salt);
         userAuthenticationMapper.insert(authentication);
+        return true;
+    }
+
+    /**
+     * 根据user id删除用户
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public boolean deleteUserById(Long id) {
+        removeById(id);
+        userAuthenticationMapper
+            .delete(Wrappers.<UserAuthentication>lambdaQuery().eq(UserAuthentication::getUserId, id));
+        return true;
+    }
+
+    /**
+     * 根据id集合删除对应用户
+     *
+     * @param ids
+     * @return
+     */
+    @Override
+    public boolean deleteUsersByIds(List<Long> ids) {
+        removeByIds(ids);
+        userAuthenticationMapper
+            .delete(Wrappers.<UserAuthentication>lambdaQuery().in(UserAuthentication::getUserId, ids));
         return true;
     }
 }

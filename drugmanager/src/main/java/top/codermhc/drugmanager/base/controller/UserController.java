@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import top.codermhc.drugmanager.base.entity.Department;
 import top.codermhc.drugmanager.base.entity.User;
-import top.codermhc.drugmanager.base.entity.UserAuthentication;
 import top.codermhc.drugmanager.base.service.DepartmentService;
 import top.codermhc.drugmanager.base.service.UserService;
 import top.codermhc.drugmanager.controller.BaseController;
+import top.codermhc.drugmanager.exception.UserExistException;
 
 /**
  * @author Ye Minghui
@@ -50,6 +50,10 @@ public class UserController extends BaseController {
 
     @PostMapping("/user")
     public User post(@Validated @RequestBody User user) {
+        User one = userService.getOne(Wrappers.<User>lambdaQuery().eq(User::getIdentity, user.getIdentity()));
+        if (one != null) {
+            throw new UserExistException();
+        }
         userService.addUser(user);
         return user;
     }
@@ -79,7 +83,7 @@ public class UserController extends BaseController {
 
     @DeleteMapping("/user")
     public boolean delete(@RequestParam("id") Long id) {
-        return userService.removeById(id);
+        return userService.deleteUserById(id);
     }
 
     @GetMapping(value = "/user/page")
@@ -90,13 +94,13 @@ public class UserController extends BaseController {
     }
 
     @GetMapping(value = "/user/list")
-    public Object list(@RequestParam("ids") List<Long> ids) {
+    public Object list(@RequestBody List<Long> ids) {
         return userService.listByIds(ids);
     }
 
     @DeleteMapping(value = "/user/list")
-    public boolean deleteAll(@RequestParam("ids") List<Long> ids) {
-        return userService.removeByIds(ids);
+    public boolean deleteAll(@RequestBody List<Long> ids) {
+        return userService.deleteUsersByIds(ids);
     }
 
     @PostMapping(value = "/user/search")

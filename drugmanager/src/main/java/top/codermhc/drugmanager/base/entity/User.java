@@ -1,10 +1,14 @@
 package top.codermhc.drugmanager.base.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import lombok.Data;
 
 /**
@@ -30,6 +34,8 @@ public class User implements Serializable {
     /**
      * 身份证号
      */
+    @NotNull
+    @Pattern(regexp = "^[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$", message = "身份证号不合法")
     private String identity;
 
     /**
@@ -50,6 +56,7 @@ public class User implements Serializable {
     /**
      * 电子邮箱
      */
+    @Email
     private String email;
 
     /**
@@ -65,6 +72,7 @@ public class User implements Serializable {
     /**
      * 用户所属角色
      */
+    @Min(1)
     private Integer roleId;
 
     /**
