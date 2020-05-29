@@ -1,16 +1,14 @@
 package top.codermhc.drugmanager.base.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import javax.annotation.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.codermhc.drugmanager.base.entity.User;
 import top.codermhc.drugmanager.base.entity.UserAuthentication;
 import top.codermhc.drugmanager.base.mapper.UserAuthenticationMapper;
 import top.codermhc.drugmanager.base.mapper.UserMapper;
 import top.codermhc.drugmanager.base.service.UserService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 import top.codermhc.drugmanager.utils.PasswordHash;
 import top.codermhc.drugmanager.utils.SaltGenerator;
 import top.codermhc.drugmanager.utils.UserFlag;
@@ -28,11 +26,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 录入新用户，并设置默认密码
      *
      * @param user user with no password
-     * @param roleId 用户的角色
      * @return true for success add
      */
     @Override
-    public boolean addUser(User user, Integer roleId) {
+    public boolean addUser(User user) {
         user.setStatus(UserFlag.enable(0,UserFlag.ENABLED));
         save(user);
         UserAuthentication authentication = new UserAuthentication();
@@ -43,7 +40,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         password = PasswordHash.hash(password, salt);
         authentication.setPassword(password);
         authentication.setSalt(salt);
-        authentication.setRoleId(roleId);
         userAuthenticationMapper.insert(authentication);
         return true;
     }

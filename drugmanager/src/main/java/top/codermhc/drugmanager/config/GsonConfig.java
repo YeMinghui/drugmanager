@@ -28,6 +28,7 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import top.codermhc.drugmanager.base.entity.User;
 import top.codermhc.drugmanager.base.entity.UserAuthentication;
 import top.codermhc.drugmanager.shiro.CustomByteSource;
 
@@ -74,9 +75,9 @@ public class GsonConfig {
             @Override
             public SimplePrincipalCollection deserialize(JsonElement json, Type typeOfT,
                 JsonDeserializationContext context) throws JsonParseException {
-                Map<String, Set<UserAuthentication>> realmPrincipals = context
+                Map<String, Set<User>> realmPrincipals = context
                     .deserialize(json.getAsJsonObject().get("realmPrincipals"),
-                        new TypeToken<Map<String, Set<UserAuthentication>>>() {
+                        new TypeToken<Map<String, Set<User>>>() {
                         }.getType());
                 SimplePrincipalCollection collection = null;
                 try {

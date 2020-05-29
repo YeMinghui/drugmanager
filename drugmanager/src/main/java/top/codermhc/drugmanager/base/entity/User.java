@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
@@ -60,5 +61,16 @@ public class User implements Serializable {
      * 用户状态
      */
     private Integer status;
+
+    /**
+     * 用户所属角色
+     */
+    private Integer roleId;
+
+    /**
+     * 上次登录时间
+     */
+    private LocalDateTime lastLoginTime;
+
 
 }

@@ -28,7 +28,7 @@ public class RoleController extends BaseController {
     @GetMapping("/role")
     public Role get(@RequestParam(value = "id", required = false) Long id) {
         if (id == null) {
-            return roleService.getById(authentication().getRoleId());
+            return roleService.getById(user().getRoleId());
         }
         return roleService.getById(id);
     }

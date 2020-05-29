@@ -98,7 +98,7 @@ public class UserVOServiceImpl implements UserVOService {
             userVO.setUserAuthentication(userAuthenticationService
                 .getOne(Wrappers.<UserAuthentication>lambdaQuery().eq(UserAuthentication::getUserId, user.getId())));
             userVO.setDepartment(departmentService.getById(user.getDepartmentId()));
-            userVO.setRole(roleService.getById(userVO.getUserAuthentication().getRoleId()));
+            userVO.setRole(roleService.getById(userVO.getUser().getRoleId()));
             ops.set(userVO,60,TimeUnit.MINUTES);
             return userVO;
         }

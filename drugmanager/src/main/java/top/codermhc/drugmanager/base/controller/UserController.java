@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import top.codermhc.drugmanager.base.entity.Department;
 import top.codermhc.drugmanager.base.entity.User;
+import top.codermhc.drugmanager.base.entity.UserAuthentication;
 import top.codermhc.drugmanager.base.service.DepartmentService;
 import top.codermhc.drugmanager.base.service.UserService;
 import top.codermhc.drugmanager.controller.BaseController;
@@ -41,21 +42,39 @@ public class UserController extends BaseController {
     @GetMapping("/user")
     public User get(@RequestParam("id") Long id) {
         // 普通用户只能获取自己的信息
-        if (!isAdmin() && !authentication().getUserId().equals(id)) {
+        if (!isAdmin() && !user().getId().equals(id)) {
             throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "没有权限");
         }
         return userService.getById(id);
     }
 
     @PostMapping("/user")
-    public User post(@Validated @RequestBody User user, @RequestParam("roleId") Integer roleId) {
-        userService.addUser(user, roleId);
+    public User post(@Validated @RequestBody User user) {
+        userService.addUser(user);
         return user;
     }
 
+    //修改用户信息，管理员可以操作所有用户，用户可以操作自己。
     @RequestMapping(value = "/user", method = {RequestMethod.PUT, RequestMethod.PATCH})
     public boolean modify(@Validated @RequestBody User user) {
-        return userService.updateById(user);
+        if (isAdmin()) {
+            if (user.getId() != null) {
+                return userService.updateById(user);
+            } else {
+                throw new HttpClientErrorException(HttpStatus.NOT_MODIFIED, "未修改");
+            }
+        } else {
+            if (user().getId().equals(user.getId())) {
+                // 用户只能修改邮箱和电话
+                User tomodify = new User();
+                tomodify.setId(user.getId());
+                tomodify.setEmail(user.getEmail());
+                tomodify.setPhone(user.getPhone());
+                return userService.updateById(tomodify);
+            } else {
+                throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "没有修改用户的权利");
+            }
+        }
     }
 
     @DeleteMapping("/user")

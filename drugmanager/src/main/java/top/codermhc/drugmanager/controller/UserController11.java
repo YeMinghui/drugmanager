@@ -32,7 +32,7 @@ import top.codermhc.drugmanager.vo.UserVO;
  * @author Ye Minghui
  */
 //@Controller
-public class UserController extends BaseController {
+public class UserController11 extends BaseController {
 
     @Resource(name = "userServiceImpl")
     private UserService userService;
@@ -49,7 +49,7 @@ public class UserController extends BaseController {
      * @param user 要添加的用户信息
      * @return 重定向到主页
      */
-    @PostMapping("/user")
+//    @PostMapping("/user")
     @RequiresRoles("admin")
     public String addUser(@Valid @ModelAttribute User user, @RequestParam("roleId") Integer roleId) {
         String identity = user.getIdentity();
@@ -68,7 +68,7 @@ public class UserController extends BaseController {
      * @param id  id
      * @return 重定向到主页
      */
-    @DeleteMapping("/user")
+//    @DeleteMapping("/user")
     @RequiresRoles("admin")
     public String deleteUser(@RequestBody(required = false) List<Integer> ids,
         @RequestParam(value = "id", required = false) Integer id) {
@@ -93,35 +93,35 @@ public class UserController extends BaseController {
      * @param user   修改的数据
      * @return 重定向页面
      */
-    @PatchMapping("/user")
-    public String modifyUser(@ModelAttribute @Valid User user
-        , @RequestParam(value = "roleId", required = false) Integer roleId) {
-        UserAuthentication auth = authentication();
-        if (ROLE_ADMIN_ID.equals(auth.getRoleId())) {
-            if (user.getId() != null) {
-                userService.updateById(user);
-                if (roleId != null) {
-                    UserAuthentication authentication = new UserAuthentication();
-                    authentication.setRoleId(roleId);
-                    userAuthenticationService.update(authentication,
-                        Wrappers.<UserAuthentication>lambdaUpdate().eq(UserAuthentication::getUserId, user.getId()));
-                }
-                userVOService.evict(user.getId());
-            } else {
-                throw new HttpClientErrorException(HttpStatus.NOT_MODIFIED, "未修改");
-            }
-        } else if (auth.getUserId().equals(user.getId())) {
-            // 用户只能修改邮箱和电话
-//            userService.updateById(user);
-            userService.update(user,
-                Wrappers.<User>lambdaUpdate().eq(User::getId, user.getId()).set(User::getEmail, user.getEmail())
-                    .set(User::getPhone, user.getPhone()));
-            userVOService.evict(user.getId());
-        } else {
-            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "没有修改用户的权利");
-        }
-        return "redirect:/index.html";
-    }
+//    @PatchMapping("/user")
+//    public String modifyUser(@ModelAttribute @Valid User user
+//        , @RequestParam(value = "roleId", required = false) Integer roleId) {
+//        UserAuthentication auth = authentication();
+//        if (ROLE_ADMIN_ID.equals(auth.getRoleId())) {
+//            if (user.getId() != null) {
+//                userService.updateById(user);
+//                if (roleId != null) {
+//                    UserAuthentication authentication = new UserAuthentication();
+//                    authentication.setRoleId(roleId);
+//                    userAuthenticationService.update(authentication,
+//                        Wrappers.<UserAuthentication>lambdaUpdate().eq(UserAuthentication::getUserId, user.getId()));
+//                }
+//                userVOService.evict(user.getId());
+//            } else {
+//                throw new HttpClientErrorException(HttpStatus.NOT_MODIFIED, "未修改");
+//            }
+//        } else if (auth.getUserId().equals(user.getId())) {
+//            // 用户只能修改邮箱和电话
+////            userService.updateById(user);
+//            userService.update(user,
+//                Wrappers.<User>lambdaUpdate().eq(User::getId, user.getId()).set(User::getEmail, user.getEmail())
+//                    .set(User::getPhone, user.getPhone()));
+//            userVOService.evict(user.getId());
+//        } else {
+//            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "没有修改用户的权利");
+//        }
+//        return "redirect:/index.html";
+//    }
 
     /**
      * 修改密码
@@ -129,10 +129,10 @@ public class UserController extends BaseController {
      * @param thenew 新密码
      * @return 重定向到首页
      */
-    @PostMapping("/changePass")
+//    @PostMapping("/changePass")
     @RequiresUser
     public String changPass(@RequestParam("old") String old, @RequestParam("thenew") String thenew) {
-        UserAuthentication authentication = authentication();
+        UserAuthentication authentication = userAuthenticationService.getOne(Wrappers.<UserAuthentication>lambdaQuery().eq(UserAuthentication::getUserId,user().getId()));
         String password = authentication.getPassword();
         String hash = PasswordHash.hash(old, authentication.getSalt());
         if (!password.equals(hash)) {
@@ -148,10 +148,10 @@ public class UserController extends BaseController {
     }
 
 
-    @GetMapping("/user")
+//    @GetMapping("/user")
     @ResponseBody
     public ResponseData get(@RequestParam("id") Long id) {
-        UserVO byId = userVOService.getById(authentication().getUserId());
+        UserVO byId = userVOService.getById(user().getId());
         return new ResponseData(HttpStatus.OK, "success", byId);
     }
 

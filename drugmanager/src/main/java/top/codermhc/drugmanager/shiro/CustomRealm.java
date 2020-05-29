@@ -2,7 +2,6 @@ package top.codermhc.drugmanager.shiro;
 
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,15 +17,13 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import top.codermhc.drugmanager.base.entity.Role;
+import top.codermhc.drugmanager.base.entity.User;
 import top.codermhc.drugmanager.base.entity.UserAuthentication;
 import top.codermhc.drugmanager.base.service.RoleService;
 import top.codermhc.drugmanager.base.service.UserAuthenticationService;
 import top.codermhc.drugmanager.base.service.UserService;
-import top.codermhc.drugmanager.utils.UserFlag;
 
 /**
  * 自定义Shiro Realm, 使用workId和Password作为登录的凭证.
@@ -49,9 +46,9 @@ public class CustomRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        UserAuthentication authentication = (UserAuthentication) principalCollection.getPrimaryPrincipal();
+        User user = (User) principalCollection.getPrimaryPrincipal();
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        Role role = roleService.getById(authentication.getRoleId());
+        Role role = roleService.getById(user.getRoleId());
         authorizationInfo.addRoles(Collections.singleton(role.getName()));
         String[] split = role.getPerms().split(",");
         authorizationInfo.addStringPermissions(Arrays.asList(split));
@@ -82,11 +79,10 @@ public class CustomRealm extends AuthorizingRealm {
         if (authentication == null) {
             throw new UnknownAccountException();
         }
-        authentication.setLastLoginTime(LocalDateTime.now());
-        userAuthenticationService.update(
-            Wrappers.<UserAuthentication>lambdaUpdate().eq(UserAuthentication::getId, authentication.getId())
-                .set(UserAuthentication::getLastLoginTime, authentication.getLastLoginTime()));
-        return new SimpleAuthenticationInfo(authentication, authentication.getPassword(),
+        User user = userService.getById(authentication.getUserId());
+        user.setLastLoginTime(LocalDateTime.now());
+        userService.updateById(user);
+        return new SimpleAuthenticationInfo(user, authentication.getPassword(),
             new CustomByteSource(authentication.getSalt()), getName());
     }
 

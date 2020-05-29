@@ -101,7 +101,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler({Exception.class, ServletException.class})
     public ResponseData defaultException(Exception e) {
-        log.error(e.getMessage(), e.getCause());
+        log.error(e.getMessage(), e);
         return new ResponseData(HttpStatus.INTERNAL_SERVER_ERROR, "内部错误，请联系管理员", null);
     }
 

@@ -4,10 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Resource;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.client.HttpClientErrorException;
-import top.codermhc.drugmanager.base.entity.UserAuthentication;
+import top.codermhc.drugmanager.base.entity.User;
+import top.codermhc.drugmanager.exception.TokenExpiredException;
 import top.codermhc.drugmanager.service.UserVOService;
 import top.codermhc.drugmanager.vo.UserVO;
 
@@ -26,11 +28,11 @@ public class BaseController {
     private UserVOService userVOService;
 
     /**
-     * 获取当前的认证对象
-     * @return authentication
+     * 获取当前user
+     * @return user
      */
-    public UserAuthentication authentication() {
-        return (UserAuthentication) SecurityUtils.getSubject().getPrincipal();
+    public User user() {
+        return (User) subjectAuthenticated().getPrincipal();
     }
 
     /**
@@ -38,15 +40,34 @@ public class BaseController {
      * @return 是返回true
      */
     public boolean isAdmin() {
-        return SecurityUtils.getSubject().hasRole("admin");
+        return subjectAuthenticated().hasRole("admin");
     }
 
+    /**
+     * 获取当前subject, 并检测授权, 抛出授权过期
+     * @return
+     */
+    public Subject subjectAuthenticated() {
+        Subject subject = subject();
+        if (!subject.isAuthenticated()) {
+            throw new TokenExpiredException();
+        }
+        return subject;
+    }
+
+    /**
+     * 获取Subject
+     * @return
+     */
+    public Subject subject() {
+        return SecurityUtils.getSubject();
+    }
 
     /**
      * 注销当前对象
      */
     public void doLogout() {
-        SecurityUtils.getSubject().logout();
+        subjectAuthenticated().logout();
     }
 
     /**
@@ -55,8 +76,7 @@ public class BaseController {
      * @param model Model
      */
     public void setLoginInfo(Model model) {
-        UserAuthentication authentication = authentication();
-        UserVO login_info = userVOService.getById(authentication.getUserId());
+        UserVO login_info = userVOService.getById(user().getId());
         model.addAttribute("login_info", login_info);
     }
 

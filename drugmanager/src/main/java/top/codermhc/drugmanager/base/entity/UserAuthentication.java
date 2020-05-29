@@ -1,9 +1,8 @@
 package top.codermhc.drugmanager.base.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -38,15 +37,5 @@ public class UserAuthentication implements Serializable {
      * 盐
      */
     private String salt;
-
-    /**
-     * 用户所属角色
-     */
-    private Integer roleId;
-
-    /**
-     * 上次登录时间
-     */
-    private LocalDateTime lastLoginTime;
 
 }
