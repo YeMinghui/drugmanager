@@ -55,13 +55,13 @@ public class RoleController extends BaseController {
         return roleService.page(new Page<>(page, limit));
     }
 
-    @GetMapping(value = "/role/list")
-    public Object list(@RequestParam("ids") List<Long> ids) {
+    @PostMapping(value = "/role/list")
+    public Object list(@RequestBody List<Long> ids) {
         return roleService.listByIds(ids);
     }
 
     @DeleteMapping(value = "/role/list")
-    public boolean deleteAll(@RequestParam("ids") List<Long> ids) {
+    public boolean deleteAll(@RequestBody List<Long> ids) {
         return roleService.removeByIds(ids);
     }
 

@@ -52,13 +52,13 @@ public class PrescriptionController {
         return prescriptionService.page(new Page<>(page, limit));
     }
 
-    @GetMapping(value = "/prescription/list")
-    public Object list(@RequestParam("ids") List<Long> ids) {
+    @PostMapping(value = "/prescription/list")
+    public Object list(@RequestBody List<Long> ids) {
         return prescriptionService.listByIds(ids);
     }
 
     @DeleteMapping(value = "/prescription/list")
-    public boolean deleteAll(@RequestParam("ids") List<Long> ids) {
+    public boolean deleteAll(@RequestBody List<Long> ids) {
         return prescriptionService.removeByIds(ids);
     }
 

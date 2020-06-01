@@ -67,50 +67,7 @@ public class BaseController {
      * 注销当前对象
      */
     public void doLogout() {
-        subjectAuthenticated().logout();
+        subject().logout();
     }
 
-    /**
-     * 设置用户的登录信息
-     *
-     * @param model Model
-     */
-    public void setLoginInfo(Model model) {
-        UserVO login_info = userVOService.getById(user().getId());
-        model.addAttribute("login_info", login_info);
-    }
-
-    /**
-     * 设置分页信息
-     *
-     * @param model      Model
-     * @param current    当前页
-     * @param size       页大小
-     * @param itemsCount 总行数
-     */
-    public void setPage(Model model, Integer current, Integer size, int itemsCount) {
-        model.addAttribute("current", current);
-        model.addAttribute("size", size);
-        model.addAttribute("count", itemsCount);
-        int pageCount = itemsCount / size + (itemsCount % size != 0 ? 1 : 0);
-        model.addAttribute("pageCount", pageCount);
-    }
-
-    /**
-     * 支持的操作
-     */
-    protected List<String> funcOps = Arrays.asList("list", "add", "del", "modify", "info");
-
-    /**
-     * 验证操作选项
-     *
-     * @param func  操作标识
-     * @param model Model
-     */
-    protected void validFunc(String func, Model model) {
-        if (!funcOps.contains(func)) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "操作不支持");
-        }
-        model.addAttribute("func", func);
-    }
 }

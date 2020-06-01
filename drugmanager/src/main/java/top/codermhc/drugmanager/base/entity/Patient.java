@@ -29,6 +29,6 @@ public class Patient implements Serializable {
     /**
      * 身份证号
      */
-    private String identify;
+    private String identity;
 
 }

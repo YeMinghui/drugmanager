@@ -93,7 +93,7 @@ public class UserController extends BaseController {
         return userService.page(new Page<>(page, limit));
     }
 
-    @GetMapping(value = "/user/list")
+    @PostMapping(value = "/user/list")
     public Object list(@RequestBody List<Long> ids) {
         return userService.listByIds(ids);
     }

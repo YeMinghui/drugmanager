@@ -52,13 +52,13 @@ public class MedicalCaseController {
         return medicalCaseService.page(new Page<>(page, limit));
     }
 
-    @GetMapping(value = "/medicalCase/list")
-    public Object list(@RequestParam("ids") List<Long> ids) {
+    @PostMapping(value = "/medicalCase/list")
+    public Object list(@RequestBody List<Long> ids) {
         return medicalCaseService.listByIds(ids);
     }
 
     @DeleteMapping(value = "/medicalCase/list")
-    public boolean deleteAll(@RequestParam("ids") List<Long> ids) {
+    public boolean deleteAll(@RequestBody List<Long> ids) {
         return medicalCaseService.removeByIds(ids);
     }
 

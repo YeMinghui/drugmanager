@@ -52,13 +52,13 @@ public class UserAuthenticationController {
         return userAuthenticationService.page(new Page<>(page, limit));
     }
 
-    @GetMapping(value = "/userAuthentication/list")
-    public Object list(@RequestParam("ids") List<Long> ids) {
+    @PostMapping(value = "/userAuthentication/list")
+    public Object list(@RequestBody List<Long> ids) {
         return userAuthenticationService.listByIds(ids);
     }
 
     @DeleteMapping(value = "/userAuthentication/list")
-    public boolean deleteAll(@RequestParam("ids") List<Long> ids) {
+    public boolean deleteAll(@RequestBody List<Long> ids) {
         return userAuthenticationService.removeByIds(ids);
     }
 

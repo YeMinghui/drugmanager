@@ -40,7 +40,7 @@ public class InventoryChange implements Serializable {
     /**
      * 操作方式
      */
-    private Integer operateMethod;
+    private String operateMethod;
 
     /**
      * 操作明细id

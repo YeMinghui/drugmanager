@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
@@ -32,6 +33,7 @@ import top.codermhc.drugmanager.base.entity.User;
 import top.codermhc.drugmanager.base.entity.UserAuthentication;
 import top.codermhc.drugmanager.shiro.CustomByteSource;
 
+@Slf4j
 @Configuration
 public class GsonConfig {
 
@@ -67,7 +69,9 @@ public class GsonConfig {
 
             @Override
             public LocalDate read(JsonReader in) throws IOException {
-                return LocalDate.parse(in.nextString());
+                String arg = in.nextString();
+                log.info("gson parse localdate: [{}]", arg);
+                return LocalDate.parse(arg);
             }
         }.nullSafe());
 

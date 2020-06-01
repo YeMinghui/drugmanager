@@ -34,6 +34,11 @@ public class PrescriptionDetail implements Serializable {
     /**
      * 剂量
      */
-    private String dose;
+    private Integer dose;
+
+    /**
+     * 次数
+     */
+    private Integer times;
 
 }

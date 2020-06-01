@@ -52,13 +52,13 @@ public class ${table.controllerName} {
         return ${table.entityPath}Service.page(new Page<>(page, limit));
     }
 
-    @GetMapping(value = "/${table.entityPath}/list")
-    public Object list(@RequestParam("ids") List<Long> ids) {
+    @PostMapping(value = "/${table.entityPath}/list")
+    public Object list(@RequestBody List<Long> ids) {
         return ${table.entityPath}Service.listByIds(ids);
     }
 
     @DeleteMapping(value = "/${table.entityPath}/list")
-    public boolean deleteAll(@RequestParam("ids") List<Long> ids) {
+    public boolean deleteAll(@RequestBody List<Long> ids) {
         return ${table.entityPath}Service.removeByIds(ids);
     }
 

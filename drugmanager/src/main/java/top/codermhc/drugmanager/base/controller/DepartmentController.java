@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,13 +53,13 @@ public class DepartmentController {
         return departmentService.page(new Page<>(page, limit));
     }
 
-    @GetMapping(value = "/department/list")
-    public Object list(@RequestParam("ids") List<Long> ids) {
+    @PostMapping(value = "/department/list")
+    public Object list(@RequestBody List<Long> ids) {
         return departmentService.listByIds(ids);
     }
 
     @DeleteMapping(value = "/department/list")
-    public boolean deleteAll(@RequestParam("ids") List<Long> ids) {
+    public boolean deleteAll(@RequestBody List<Long> ids) {
         return departmentService.removeByIds(ids);
     }
 

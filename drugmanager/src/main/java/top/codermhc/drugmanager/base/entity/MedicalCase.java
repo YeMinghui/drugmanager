@@ -34,6 +34,6 @@ public class MedicalCase implements Serializable {
     /**
      * 病情描述
      */
-    private String describe;
+    private String describes;
 
 }

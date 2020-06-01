@@ -1,8 +1,12 @@
 package top.codermhc.drugmanager.base.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.codermhc.drugmanager.base.entity.Department;
+import top.codermhc.drugmanager.base.entity.User;
 import top.codermhc.drugmanager.base.service.ManufacturerService;
 import top.codermhc.drugmanager.base.entity.Manufacturer;
 
@@ -52,14 +58,38 @@ public class ManufacturerController {
         return manufacturerService.page(new Page<>(page, limit));
     }
 
-    @GetMapping(value = "/manufacturer/list")
-    public Object list(@RequestParam("ids") List<Long> ids) {
+    @PostMapping(value = "/manufacturer/list")
+    public Object list(@RequestBody List<Long> ids) {
         return manufacturerService.listByIds(ids);
     }
 
     @DeleteMapping(value = "/manufacturer/list")
-    public boolean deleteAll(@RequestParam("ids") List<Long> ids) {
+    public boolean deleteAll(@RequestBody List<Long> ids) {
         return manufacturerService.removeByIds(ids);
+    }
+
+    @PostMapping(value = "/manufacturer/search")
+    public Object search(@RequestParam("type") String type, @RequestParam("value") String value) {
+        if (Strings.isBlank(value)) {
+            return null;
+        }
+        SFunction<Manufacturer, ?> function;
+        switch (type) {
+            case "name":
+                function = Manufacturer::getName;
+            case "phone":
+                function = Manufacturer::getPhone;
+                break;
+            case "address":
+                function = Manufacturer::getAddress;
+                break;
+            case "postcode":
+                function = Manufacturer::getPostcode;
+                break;
+            default:
+                return null;
+        }
+        return manufacturerService.list(Wrappers.<Manufacturer>lambdaQuery().like(function, value.trim()));
     }
 
 }

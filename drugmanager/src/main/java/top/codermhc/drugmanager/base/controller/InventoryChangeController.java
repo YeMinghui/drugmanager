@@ -52,13 +52,13 @@ public class InventoryChangeController {
         return inventoryChangeService.page(new Page<>(page, limit));
     }
 
-    @GetMapping(value = "/inventoryChange/list")
-    public Object list(@RequestParam("ids") List<Long> ids) {
+    @PostMapping(value = "/inventoryChange/list")
+    public Object list(@RequestBody List<Long> ids) {
         return inventoryChangeService.listByIds(ids);
     }
 
     @DeleteMapping(value = "/inventoryChange/list")
-    public boolean deleteAll(@RequestParam("ids") List<Long> ids) {
+    public boolean deleteAll(@RequestBody List<Long> ids) {
         return inventoryChangeService.removeByIds(ids);
     }
 

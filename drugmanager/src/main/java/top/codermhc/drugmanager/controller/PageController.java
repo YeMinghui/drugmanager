@@ -37,8 +37,9 @@ import top.codermhc.drugmanager.utils.UserFlag;
 public class PageController extends BaseController {
 
     @PostMapping("/login")
-    public ResponseData login(@RequestParam("workId") String workId, @RequestParam("password") String password,
-        @RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe) {
+    public ResponseData login(@RequestParam("workId") String workId, @RequestParam("password") String password
+//        , @RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe
+    ) {
         Subject subject = subject();
         Map<String, Object> data = new HashMap<>();
         if (subject.isAuthenticated()) {
@@ -47,7 +48,7 @@ public class PageController extends BaseController {
             return new ResponseData(HttpStatus.CREATED, "已登录", data);
         }
         UsernamePasswordToken token = new UsernamePasswordToken(workId, password);
-        token.setRememberMe(rememberMe);
+//        token.setRememberMe(rememberMe);
         subject.login(token);
         int status = user().getStatus();
         if (UserFlag.isEnabled(status, UserFlag.DISABLED)) {
@@ -66,11 +67,12 @@ public class PageController extends BaseController {
         return new ResponseData(HttpStatus.OK, "success", data);
     }
 
-    @GetMapping("/logout")
-    public void logout() {
-        doLogout();
-        log.debug("logout user workId {}, LOGOUT", user().getWorkId());
-    }
+//    @PostMapping("/logout")
+//    public boolean logout() {
+//        doLogout();
+//        log.debug("logout user workId {}, LOGOUT", user().getWorkId());
+//        return true;
+//    }
 
     @Resource(name = "userAuthenticationServiceImpl")
     UserAuthenticationService userAuthenticationService;

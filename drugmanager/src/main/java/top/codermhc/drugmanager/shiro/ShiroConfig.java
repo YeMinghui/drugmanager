@@ -11,6 +11,7 @@ import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
+import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.Cookie;
@@ -46,7 +47,7 @@ public class ShiroConfig {
         manager.setRealm(customRealm());
         manager.setCacheManager(cacheManager());
         manager.setSessionManager(sessionManager());
-        manager.setRememberMeManager(cookieRememberMeManager());
+//        manager.setRememberMeManager(cookieRememberMeManager());
         return manager;
     }
 
@@ -56,6 +57,7 @@ public class ShiroConfig {
         // 所有访问走ajax请求
         // 登录url不用认证
         chainDefinition.addPathDefinition("/login", "ajax,anon");
+        chainDefinition.addPathDefinition("/logout","ajax,logout");
         // 从文件中读取规则
         new PropertiesParser().parse("shiro-rules.properties").forEach(
             (key, value) -> chainDefinition.addPathDefinition(key,"ajax,".concat(value))
@@ -73,6 +75,9 @@ public class ShiroConfig {
         map.put("ajax", new AjaxFilter());
         map.put("authc", new CustomAuthenticationFilter());
         map.put("perms", new RestPermissionAuthorizationFilter());
+        CustomLogoutFilter customLogoutFilter = new CustomLogoutFilter();
+        customLogoutFilter.setPostOnlyLogout(true);
+        map.put("logout", customLogoutFilter);
         shiroFilterFactoryBean.setFilters(map);
         shiroFilterFactoryBean.setFilterChainDefinitionMap(shiroFilterChainDefinition().getFilterChainMap());
         shiroFilterFactoryBean.setSecurityManager(securityManager());
@@ -95,25 +100,26 @@ public class ShiroConfig {
     @Bean
     SessionManager sessionManager() {
         DefaultWebSessionManager manager = new CustomSessionManager();
+        manager.setGlobalSessionTimeout(1000 * 60 * 60);
         return manager;
     }
-
-    @Bean("cookieRememberMeManager")
-    RememberMeManager cookieRememberMeManager() {
-        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
-        cookieRememberMeManager.setCookie(rememberMeCookie());
-        return cookieRememberMeManager;
-    }
-
-    @Bean
-    Cookie rememberMeCookie() {
-        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
-        simpleCookie.setPath("/");
-        simpleCookie.setHttpOnly(true);
-        simpleCookie.setSecure(false);
-        // 7 days.
-        simpleCookie.setMaxAge(60*60*24*7);
-        return simpleCookie;
-    }
+//
+//    @Bean("cookieRememberMeManager")
+//    RememberMeManager cookieRememberMeManager() {
+//        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+//        cookieRememberMeManager.setCookie(rememberMeCookie());
+//        return cookieRememberMeManager;
+//    }
+//
+//    @Bean
+//    Cookie rememberMeCookie() {
+//        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+//        simpleCookie.setPath("/");
+//        simpleCookie.setHttpOnly(true);
+//        simpleCookie.setSecure(false);
+//        // 7 days.
+//        simpleCookie.setMaxAge(60*60*24*7);
+//        return simpleCookie;
+//    }
 
 }

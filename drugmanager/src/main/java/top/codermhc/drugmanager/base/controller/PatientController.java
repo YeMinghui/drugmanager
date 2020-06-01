@@ -52,13 +52,13 @@ public class PatientController {
         return patientService.page(new Page<>(page, limit));
     }
 
-    @GetMapping(value = "/patient/list")
-    public Object list(@RequestParam("ids") List<Long> ids) {
+    @PostMapping(value = "/patient/list")
+    public Object list(@RequestBody List<Long> ids) {
         return patientService.listByIds(ids);
     }
 
     @DeleteMapping(value = "/patient/list")
-    public boolean deleteAll(@RequestParam("ids") List<Long> ids) {
+    public boolean deleteAll(@RequestBody List<Long> ids) {
         return patientService.removeByIds(ids);
     }
 
