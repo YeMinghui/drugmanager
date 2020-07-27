@@ -1,7 +1,6 @@
 package top.codermhc.drugmanager.base.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -19,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.codermhc.drugmanager.base.entity.DrugDetail;
+import top.codermhc.drugmanager.base.entity.Inventory;
 import top.codermhc.drugmanager.base.entity.InventoryChange;
 import top.codermhc.drugmanager.base.service.DrugDetailService;
 import top.codermhc.drugmanager.base.service.InventoryChangeService;
 import top.codermhc.drugmanager.base.service.InventoryService;
-import top.codermhc.drugmanager.base.entity.Inventory;
 import top.codermhc.drugmanager.controller.BaseController;
 
 /**
@@ -121,5 +120,10 @@ public class InventoryController extends BaseController {
 
     @Resource(name = "drugDetailServiceImpl")
     private DrugDetailService drugDetailService;
+
+    @GetMapping("/inventory/outdates")
+	public Object getOutDates() {
+        return inventoryService.hasOutDates() ? inventoryService.getOutDates() : Collections.EMPTY_LIST;
+    }
 
 }
